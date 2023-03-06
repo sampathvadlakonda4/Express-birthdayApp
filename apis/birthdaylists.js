@@ -16,6 +16,35 @@ router.route("/list").get(async (req,res)=>{
     }
 })
 
+// get bday list according to user
+router.route("/list/search").post(async (req,res)=>{
+    try{
+        const {loginuserid} = req.body 
+        if(!loginuserid){
+            res.status(400)
+            res.json({
+                message: "loginuserid is mandatory"
+            })
+            throw new Error("loginuserid is mandatory")
+        }
+        const birthdayList = await birthdayDetails.find({loginuserid})
+        if(birthdayList != ""){
+            res.json(birthdayList)
+        }
+        else{
+            res.status(204)
+            res.json({
+                message: "No records found"
+            })
+            throw new Error("No records found")
+        }
+    }
+    catch(err){
+        res.status(400)
+        throw new Error(err)
+    }
+})
+
 // add new bday 
 router.route("/addnew").post(async (req,res)=>{
     try{
