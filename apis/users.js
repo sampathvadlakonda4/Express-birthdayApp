@@ -18,8 +18,8 @@ router.route("/list").get(async (req,res)=>{
 // add new user or signup
 router.route("/signup").post(async (req,res)=>{
     try{
-        const {username, email, phonenumber, address, pincode, password} = req.body
-        if(!username || !email || !phonenumber || !address || !pincode || !password){
+        const {username, email, phonenumber, address, pincode, password, gender, country, profilepic} = req.body
+        if(!username || !email || !phonenumber || !address || !pincode || !password || !gender || !country){
             res.status(400)
             res.json({
                 message: "All fields are mandatory"
@@ -34,7 +34,7 @@ router.route("/signup").post(async (req,res)=>{
             })
             throw new Error("Record already existed with this email")
         }
-        const userDetails = await userList.create({username, email, phonenumber, address, pincode, password});
+        const userDetails = await userList.create({username, email, phonenumber, address, pincode, password, gender, country, profilepic});
         res.json(userDetails)
     }
     catch(err){
@@ -46,8 +46,8 @@ router.route("/signup").post(async (req,res)=>{
 //update user
 router.route("/update").post(async (req,res)=>{
     try{
-        const {username, email, phonenumber, address, pincode, password} = req.body
-        if(!username || !email || !phonenumber || !address || !pincode || !password){
+        const {username, email, phonenumber, address, pincode, password, gender, country, profilepic} = req.body
+        if(!username || !email || !phonenumber || !address || !pincode || !password || !gender || !country){
             res.status(400)
             res.json({
                 message: "All fields are mandatory"
@@ -60,7 +60,7 @@ router.route("/update").post(async (req,res)=>{
                 {
                     email
                 },
-                {username, email, phonenumber, address, pincode, password},
+                {username, email, phonenumber, address, pincode, password, gender, country, profilepic},
                 {new: true}
             );
             res.json(userUpdated_Details)
@@ -108,7 +108,7 @@ router.route("/search").post(async (req,res)=>{
     }
 })
 
-// change or forgot password
+// change or forgot password checking user
 router.route("/checkforuser").post(async (req,res)=>{
     try{
         const {email} = req.body

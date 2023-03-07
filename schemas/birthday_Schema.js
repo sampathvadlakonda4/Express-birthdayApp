@@ -29,6 +29,17 @@ const birthdayDetails = mongoose.Schema({
         type: String,
         required: [true, "Please add dateofbirth"]
     },
+    gender:{
+        type: String,
+        required: [true, "Please add gender"]
+    },
+    country:{
+        type: String,
+        required: [true, "Please add country"]
+    },
+    profilepic:{
+        type: String,
+    },
     loginuserid:{
         type: String,
         required: [true, "Please add loginuserid"]

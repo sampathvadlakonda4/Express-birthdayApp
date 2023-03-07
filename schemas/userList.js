@@ -25,6 +25,17 @@ const userList = mongoose.Schema({
         type: String,
         required: [true, "Please add password"]
     },
+    gender:{
+        type: String,
+        required: [true, "Please add gender"]
+    },
+    country:{
+        type: String,
+        required: [true, "Please add country"]
+    },
+    profilepic:{
+        type: String,
+    },
 },
 {
     timestamps: true

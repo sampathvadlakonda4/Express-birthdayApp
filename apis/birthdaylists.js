@@ -48,8 +48,8 @@ router.route("/list/search").post(async (req,res)=>{
 // add new bday 
 router.route("/addnew").post(async (req,res)=>{
     try{
-        const {name, email, phonenumber, address, pincode, relation, dateofbirth,  loginuserid} = req.body
-        if(!name || !email || !phonenumber || !address || !pincode || !relation || !dateofbirth || !loginuserid){
+        const {name, email, phonenumber, address, pincode, relation, dateofbirth, gender , country, profilepic, loginuserid} = req.body
+        if(!name || !email || !phonenumber || !address || !pincode || !relation || !dateofbirth || !loginuserid || !gender || !country){
             res.status(400)
             res.json({
                 message: "All fields are mandatory"
@@ -65,7 +65,7 @@ router.route("/addnew").post(async (req,res)=>{
             throw new Error("Record already existed with this name")
         }
         const birthdayCreated_Details = await birthdayDetails.create({
-            name, email, phonenumber, address, pincode, relation, dateofbirth, loginuserid
+            name, email, phonenumber, address, pincode, relation, dateofbirth, gender, country, profilepic, loginuserid
         });
         res.json(birthdayCreated_Details)
     }
@@ -75,28 +75,58 @@ router.route("/addnew").post(async (req,res)=>{
     }
 })
 
-//update new bday
+//update bday
 router.route("/update").post(async (req,res)=>{
     try{
-        const {name, email, phonenumber, address, pincode, relation, dateofbirth,  loginuserid} = req.body
-        if(!name || !email || !phonenumber || !address || !pincode || !relation || !dateofbirth || !loginuserid){
+        const {name, email, phonenumber, address, pincode, relation, dateofbirth, gender , country, profilepic,  loginuserid} = req.body
+        if(!name || !email || !phonenumber || !address || !pincode || !relation || !dateofbirth || !loginuserid || !gender || !country){
             res.status(400)
             res.json({
                 message: "All fields are mandatory"
             })
             throw new Error("All fields are mandatory")
         }
-        const check_for_record = await birthdayDetails.find({name, loginuserid})
+        const check_for_record = await birthdayDetails.find({name, email, loginuserid})
         if(check_for_record != ""){
             const birthdayUpdated_Details = await birthdayDetails.findOneAndUpdate(
                 {
-                    name, loginuserid
+                    name, email, loginuserid
                 },
                 {
-                    name, email, phonenumber, address, pincode, relation, dateofbirth, loginuserid
+                    name, email, phonenumber, address, pincode, relation, dateofbirth, gender, country, profilepic, loginuserid
                 },
                 {new: true}
             );
+            res.json(birthdayUpdated_Details)
+        }
+        else{
+            res.status(404)
+            res.json({
+                message: "Record not found"
+            })
+            throw new Error("Record not found")
+        }
+    }
+    catch(err){
+        res.status(400)
+        throw new Error(err)
+    }
+})
+
+//delete bday
+router.route("/delete").delete(async (req,res)=>{
+    try{
+        const {name, email, phonenumber, address, pincode, relation, dateofbirth, gender , country, profilepic,  loginuserid} = req.body
+        if(!name || !email || !phonenumber || !address || !pincode || !relation || !dateofbirth || !loginuserid || !gender || !country){
+            res.status(400)
+            res.json({
+                message: "All fields are mandatory"
+            })
+            throw new Error("All fields are mandatory")
+        }
+        const check_for_record = await birthdayDetails.find(req.body)
+        if(check_for_record != ""){
+            const birthdayUpdated_Details = await birthdayDetails.findOneAndRemove(req.body)
             res.json(birthdayUpdated_Details)
         }
         else{
