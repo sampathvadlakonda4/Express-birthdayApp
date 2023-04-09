@@ -34,7 +34,7 @@ const userList = mongoose.Schema({
         required: [true, "Please add country"]
     },
     profilepic:{
-        type: String,
+        type: Object,
     },
 },
 {

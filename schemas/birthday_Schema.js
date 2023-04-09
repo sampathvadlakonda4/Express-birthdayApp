@@ -38,7 +38,7 @@ const birthdayDetails = mongoose.Schema({
         required: [true, "Please add country"]
     },
     profilepic:{
-        type: String,
+        type: Object,
     },
     loginuserid:{
         type: String,

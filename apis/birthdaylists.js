@@ -1,5 +1,9 @@
 const express = require("express")
+const multer = require('multer');
 const router = express.Router();
+// Configure Multer
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 const birthdayDetails = require("../schemas/birthday_Schema")
 
@@ -46,9 +50,17 @@ router.route("/list/search").post(async (req,res)=>{
 })
 
 // add new bday 
-router.route("/addnew").post(async (req,res)=>{
+router.route("/addnew").post(upload.single('profilepic'), async (req,res)=>{
     try{
-        const {name, email, phonenumber, address, pincode, relation, dateofbirth, gender , country, profilepic, loginuserid} = req.body
+        let profilepic = null;
+        if(req.file !== null && req.file !== undefined){
+            profilepic = {
+                data: req.file.buffer,
+                mimeType: req.file.mimetype,
+                size: req.file.size,
+            };
+        }
+        const {name, email, phonenumber, address, pincode, relation, dateofbirth, gender , country, loginuserid} = req.body
         if(!name || !email || !phonenumber || !address || !pincode || !relation || !dateofbirth || !loginuserid || !gender || !country){
             res.status(400)
             res.json({
@@ -76,9 +88,17 @@ router.route("/addnew").post(async (req,res)=>{
 })
 
 //update bday
-router.route("/update").post(async (req,res)=>{
+router.route("/update").post(upload.single('profilepic'), async (req,res)=>{
     try{
-        const {name, email, phonenumber, address, pincode, relation, dateofbirth, gender , country, profilepic,  loginuserid} = req.body
+        let profilepic = null;
+        if(req.file !== null && req.file !== undefined){
+            profilepic = {
+                data: req.file.buffer,
+                mimeType: req.file.mimetype,
+                size: req.file.size,
+            };
+        }
+        const {name, email, phonenumber, address, pincode, relation, dateofbirth, gender , country,  loginuserid} = req.body
         if(!name || !email || !phonenumber || !address || !pincode || !relation || !dateofbirth || !loginuserid || !gender || !country){
             res.status(400)
             res.json({

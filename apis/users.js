@@ -1,5 +1,9 @@
 const express = require("express")
+const multer = require("multer")
 const router = express.Router()
+// Configure Multer
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 const userList = require("../schemas/userList")
 
@@ -16,9 +20,17 @@ router.route("/list").get(async (req,res)=>{
 })
 
 // add new user or signup
-router.route("/signup").post(async (req,res)=>{
+router.route("/signup").post(upload.single('profilepic'), async (req,res)=>{
     try{
-        const {username, email, phonenumber, address, pincode, password, gender, country, profilepic} = req.body
+        let profilepic = null;
+        if(req.file !== null && req.file !== undefined){
+            profilepic = {
+                data: req.file.buffer,
+                mimeType: req.file.mimetype,
+                size: req.file.size,
+            };
+        }
+        const {username, email, phonenumber, address, pincode, password, gender, country} = req.body
         if(!username || !email || !phonenumber || !address || !pincode || !password || !gender || !country){
             res.status(400)
             res.json({
@@ -44,9 +56,17 @@ router.route("/signup").post(async (req,res)=>{
 })
 
 //update user
-router.route("/update").post(async (req,res)=>{
+router.route("/update").post(upload.single('profilepic'), async (req,res)=>{
     try{
-        const {username, email, phonenumber, address, pincode, password, gender, country, profilepic} = req.body
+        let profilepic = null;
+        if(req.file !== null && req.file !== undefined){
+            profilepic = {
+                data: req.file.buffer,
+                mimeType: req.file.mimetype,
+                size: req.file.size,
+            };
+        }
+        const {username, email, phonenumber, address, pincode, password, gender, country} = req.body
         if(!username || !email || !phonenumber || !address || !pincode || !password || !gender || !country){
             res.status(400)
             res.json({
